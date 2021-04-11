@@ -4,6 +4,7 @@ import sys
 from cmd import handle_web_scraping
 
 INVALID_RANGE_SPEC = 'invalid range specification, please specify range in {uint}-{uint} or {uint} format'
+INVALID_PAGE_COUNT_SPEC = 'invalid page range specification, please specify range in {uint} format'
 
 parser = argparse.ArgumentParser(
     description='scrape http://www.yougowords.com/ for words of specified length'
@@ -13,9 +14,14 @@ parser.add_argument(
     type=str,
     help='range of word lengths in {uint}-{uint} or {uint} format'
 )
+parser.add_argument(
+    'page_count',
+    type=int,
+    help='number of pages to parse for words in {uint} format, one page consists of 50 words'
+)
 
-args = parser.parse_args()
-len_range = args.range
+parser_args = parser.parse_args()
+len_range = parser_args.range
 start_len = int()
 end_len = int()
 try:
@@ -27,14 +33,23 @@ except ValueError:
     print(INVALID_RANGE_SPEC)
     sys.exit(1)
 
-if start_len < 0 or end_len < 0:
+if start_len <= 0 or end_len <= 0:
     print(INVALID_RANGE_SPEC)
+    sys.exit(1)
+
+page_count = parser_args.page_count
+if page_count <= 0:
+    print(INVALID_PAGE_COUNT_SPEC)
     sys.exit(1)
 
 x = str
 flag = False
 while not flag:
-    x = input(f'received word length range {start_len} to {end_len}, continue? [y|n] ')
+    x = input(
+        f'''word length range: {start_len} to {end_len}
+page count: {page_count}
+continue? [y|n] '''
+    )
     if x == 'n':
         print('aborting')
         sys.exit(0)
@@ -45,11 +60,10 @@ while not flag:
         print('invalid input, try again')
 
 end_len += 1
+
 args = {
     'start_len': start_len,
-    'end_len': end_len
+    'end_len': end_len,
+    'page_count': page_count
 }
 handle_web_scraping(args)
-
-
-
