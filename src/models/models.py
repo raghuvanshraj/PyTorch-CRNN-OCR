@@ -1,5 +1,6 @@
 import torch
 import torch.nn as nn
+from torch.utils.data.dataset import T_co
 
 
 class BidirectionalLSTM(nn.Module):
@@ -13,7 +14,7 @@ class BidirectionalLSTM(nn.Module):
             nn.Softmax(dim=1)
         )
 
-    def forward(self, x):
+    def forward(self, x) -> T_co:
         self.rnn.flatten_parameters()
         x, _ = self.rnn(x)
         t, b, h = x.size()
@@ -77,7 +78,7 @@ class CRNN(nn.Module):
             BidirectionalLSTM(cfg['n_hidden'], cfg['n_hidden'], cfg['n_out'])
         )
 
-    def forward(self, x: torch.Tensor):
+    def forward(self, x: torch.Tensor) -> T_co:
         x = self.conv(x)
         b, c, h, w = x.size()
 
@@ -89,16 +90,3 @@ class CRNN(nn.Module):
         x = x.transpose(1, 0)  # (b, t, h)
 
         return x
-
-
-if __name__ == '__main__':
-    cfg = {
-        'n_in': 512,
-        'n_hidden': 256,
-        'n_out': 50
-    }
-    crnn = CRNN(cfg)
-    print(crnn)
-    x = torch.randn(1, 1, 32, 128)
-    y = crnn(x)
-    print(y.shape)
