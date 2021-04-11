@@ -28,7 +28,7 @@ class WebScraper(object):
             content = chrome_webdriver.page_source
             if content:
                 words = self.get_words(content)
-                self.save_to_disk(words, word_len)
+                self.save_to_disk(words)
 
     def get_words(self, content: str) -> list:
         soup = BeautifulSoup(content, features='html.parser')
@@ -45,8 +45,8 @@ class WebScraper(object):
 
         return word_list
 
-    def save_to_disk(self, word_list: list, word_len: int):
-        filepath = os.path.join(self.words_dir, f'{word_len}.txt')
+    def save_to_disk(self, word_list: list):
+        filepath = os.path.join(self.words_dir, consts.WORDS_TEXT_FILENAME)
         fp = open(filepath, 'a+', encoding='utf-8')
         write_string = '\n'.join(word_list)
         write_string = f'{write_string}\n'
