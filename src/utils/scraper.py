@@ -12,11 +12,8 @@ class WebScraper(object):
         self.msedge_webdriver_path = os.path.join(webdriver_path, 'msedgedriver.exe')
         self.base_url = 'http://www.yougowords.com/{0}-letters'
 
-    def scrape(self, word_len: int) -> Exception:
-        try:
-            msedge_webdriver = webdriver.Edge(self.msedge_webdriver_path)
-            url = self.base_url.format(word_len)
-            content = msedge_webdriver.get(url)
-            soup = BeautifulSoup(content)
-        except Exception as err:
-            return err
+    def scrape(self, word_len: int):
+        msedge_webdriver = webdriver.Edge(self.msedge_webdriver_path)
+        url = self.base_url.format(word_len)
+        content = msedge_webdriver.get(url)
+        soup = BeautifulSoup(content)

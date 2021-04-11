@@ -13,6 +13,7 @@ parser.add_argument(
     type=str,
     help='range of word lengths in {uint}-{uint} or {uint} format'
 )
+
 args = parser.parse_args()
 len_range = args.range
 start_len = int()
