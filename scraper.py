@@ -1,7 +1,7 @@
 import argparse
 import sys
 
-from cmd_handlers import handle_web_scraping
+from cmd import handle_web_scraping
 
 INVALID_RANGE_SPEC = 'invalid range specification, please specify range in {uint}-{uint} or {uint} format'
 
