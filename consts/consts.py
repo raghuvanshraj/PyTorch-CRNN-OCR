@@ -7,7 +7,7 @@ WORDS_FILE_PATH = os.path.join(WORDS_DATA_DIR, 'words.txt')
 TRAIN_DATA_DIR = os.path.join(DATA_ROOT_DIR, 'train')
 TEST_DATA_DIR = os.path.join(DATA_ROOT_DIR, 'test')
 WEBDRIVERS_DIR = os.path.join(HOME_DIR, 'webdrivers')
-IMG_FILE_FORMAT = '.jpg'
+IMG_FILE_FORMAT = 'jpg'
 
 # default config values
 DEFAULT_TRAIN_TEST_SPLIT = 0.7

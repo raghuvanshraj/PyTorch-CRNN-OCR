@@ -35,12 +35,13 @@ class ImageGenerator(object):
         )
 
         for img, label in generator:
+            file_ext = f'{self.img_file_format}'
             train_flag = bernoulli.rvs(self.train_test_split)
 
             if train_flag:
-                img.save(os.path.join(self.train_data_dir, label + self.img_file_format))
+                img.save(os.path.join(self.train_data_dir, label + file_ext))
             else:
-                img.save(os.path.join(self.test_data_dir, label + self.img_file_format))
+                img.save(os.path.join(self.test_data_dir, label + file_ext))
 
     def create_data_dirs(self):
         if not os.path.isdir(self.train_data_dir):
