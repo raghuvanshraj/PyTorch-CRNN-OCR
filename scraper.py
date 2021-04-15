@@ -1,7 +1,7 @@
 import argparse
 import sys
 
-from handlers import handle_web_scraping
+from src.handlers import handle_web_scraping
 
 INVALID_RANGE_SPEC = 'invalid range specification, please specify range in {uint}-{uint} or {uint} format'
 INVALID_PAGE_COUNT_SPEC = 'invalid page range specification, please specify range in {uint} format'

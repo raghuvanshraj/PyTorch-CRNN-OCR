@@ -34,6 +34,8 @@ class WebScraper(object):
     def get_words(self, content: str) -> list:
         soup = BeautifulSoup(content, features='html.parser')
         table = soup.find('table', attrs={'id': 'sortable-display'})
+        if not table:
+            return []
         tbody = table.find('tbody')
         word_list = list()
         for tr in tbody.find_all('tr'):
@@ -47,6 +49,8 @@ class WebScraper(object):
         return word_list
 
     def save_to_disk(self, word_list: list):
+        if not word_list:
+            return
         fp = open(self.words_file_path, 'a+', encoding='utf-8')
         write_string = '\n'.join(word_list)
         write_string = f'{write_string}\n'

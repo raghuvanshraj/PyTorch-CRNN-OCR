@@ -8,11 +8,12 @@ import consts
 
 class ImageGenerator(object):
 
-    def __init__(self, train_test_split, random_skew, random_blur, img_height, img_count):
+    def __init__(self, train_test_split, random_skew, random_blur, img_height, img_width, img_count):
         self.train_test_split = train_test_split
         self.random_skew = random_skew
         self.random_blur = random_blur
         self.img_height = img_height
+        self.img_width = img_width
         self.img_count = img_count
 
         self.img_file_format = consts.IMG_FILE_FORMAT
@@ -30,12 +31,13 @@ class ImageGenerator(object):
             words,
             count=count,
             size=self.img_height,
+            width=128,
             random_skew=self.random_skew,
             random_blur=self.random_blur
         )
 
         for img, label in generator:
-            file_ext = f'{self.img_file_format}'
+            file_ext = f'.{self.img_file_format}'
             train_flag = bernoulli.rvs(self.train_test_split)
 
             if train_flag:
