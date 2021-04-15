@@ -12,10 +12,11 @@ class WebScraper(object):
         self.chrome_webdriver_path = os.path.join(consts.WEBDRIVERS_DIR, 'chromedriver.exe')
         self.base_url = 'http://www.yougowords.com/{0}-letters{1}'
         self.word_regex = '^[a-zA-Z]*$'
-        self.words_dir = consts.WORDS_DIR
+        self.words_data_dir = consts.WORDS_DATA_DIR
+        self.words_file_path = consts.WORDS_FILE_PATH
 
     def do(self, word_len: int, page_count: int, headless: bool):
-        assert page_count > 0
+        self.create_data_dirs()
 
         chrome_options = webdriver.ChromeOptions()
         if headless:
@@ -46,8 +47,11 @@ class WebScraper(object):
         return word_list
 
     def save_to_disk(self, word_list: list):
-        filepath = os.path.join(self.words_dir, consts.WORDS_TEXT_FILENAME)
-        fp = open(filepath, 'a+', encoding='utf-8')
+        fp = open(self.words_file_path, 'a+', encoding='utf-8')
         write_string = '\n'.join(word_list)
         write_string = f'{write_string}\n'
         fp.write(write_string)
+
+    def create_data_dirs(self):
+        if not os.path.isdir(self.words_data_dir):
+            os.mkdir(self.words_data_dir)

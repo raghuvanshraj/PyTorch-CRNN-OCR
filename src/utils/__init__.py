@@ -1,5 +1,2 @@
 from src.utils.scraper import WebScraper
-
-__all__ = [
-    WebScraper
-]
+from src.utils.image_generator import ImageGenerator
