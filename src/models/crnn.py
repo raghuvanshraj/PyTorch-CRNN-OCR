@@ -30,6 +30,16 @@ class CRNN(nn.Module):
     def __init__(self, cfg: dict):
         super(CRNN, self).__init__()
 
+        # conv layer tensor sizes
+        # (1, 128, 32)
+        # (64, 64, 16)
+        # (128, 32, 8)
+        # (256, 32, 8)
+        # (256, 16, 4)
+        # (512, 16, 4)
+        # (512, 16, 2)
+        # (512, 15, 1)
+
         self.conv = nn.Sequential()
 
         conv_out_channels = [64, 128, 256, 256, 512, 512, 512]
@@ -72,6 +82,11 @@ class CRNN(nn.Module):
 
         assert (cfg['n_in'] is not None) and (cfg['n_hidden'] is not None) and (cfg['n_out'] is not None)
         assert cfg['n_in'] == conv_out_channels[-1]
+
+        # rnn layer tensor sizes
+        # (512, 15)
+        # (cfg['n_hidden'], 15)
+        # (cfg['n_out'], 15)
 
         self.rnn = nn.Sequential(
             BidirectionalLSTM(cfg['n_in'], cfg['n_hidden'], cfg['n_hidden']),

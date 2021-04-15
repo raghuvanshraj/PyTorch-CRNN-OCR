@@ -1,1 +1,1 @@
-from src.models.models import CRNN
+from src.models.crnn import CRNN
