@@ -31,7 +31,7 @@ class ImageGenerator(object):
             words,
             count=count,
             size=self.img_height,
-            width=128,
+            width=self.img_width,
             random_skew=self.random_skew,
             random_blur=self.random_blur
         )
