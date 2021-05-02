@@ -1,6 +1,5 @@
 import torch
 import torch.nn as nn
-from torch.utils.data.dataset import T_co
 
 
 class BidirectionalLSTM(nn.Module):
@@ -14,7 +13,7 @@ class BidirectionalLSTM(nn.Module):
             nn.Softmax(dim=1)
         )
 
-    def forward(self, x) -> T_co:
+    def forward(self, x) -> torch.Tensor:
         self.rnn.flatten_parameters()
         x, _ = self.rnn(x)
         t, b, h = x.size()
@@ -48,7 +47,7 @@ class CRNN(nn.Module):
         conv_stride_size = [1, 1, 1, 1, 1, 1, 1]
         conv_kernel_size = [3, 3, 3, 3, 3, 3, 2]
 
-        def add_conv_module(idx: int, add_max_pool: bool, add_batch_norm: bool):
+        def add_conv_module(idx: int, has_max_pool: bool, has_batch_norm: bool):
             self.conv.add_module(f'conv:{idx}', nn.Conv2d(
                 conv_in_channels[idx],
                 conv_out_channels[idx],
@@ -57,12 +56,12 @@ class CRNN(nn.Module):
                 (conv_padding_size[idx], conv_padding_size[idx])
             ))
 
-            if add_batch_norm:
+            if has_batch_norm:
                 self.conv.add_module(f'batch_norm:{idx}', nn.BatchNorm2d(conv_out_channels[idx]))
 
             self.conv.add_module(f'activation{idx}', nn.ReLU(True))
 
-            if add_max_pool:
+            if has_max_pool:
                 add_max_pool_module(idx)
 
         max_pool_stride_size = [(2, 2), (2, 2), None, (2, 2), None, (2, 1), None]
@@ -80,8 +79,7 @@ class CRNN(nn.Module):
         for i in range(7):
             add_conv_module(i, add_max_pool[i], add_batch_norm[i])
 
-        assert (cfg['n_in'] is not None) and (cfg['n_hidden'] is not None) and (cfg['n_out'] is not None)
-        assert cfg['n_in'] == conv_out_channels[-1]
+        assert (cfg['n_hidden'] is not None) and (cfg['n_out'] is not None)
 
         # rnn layer tensor sizes
         # (512, 15)
@@ -89,11 +87,11 @@ class CRNN(nn.Module):
         # (cfg['n_out'], 15)
 
         self.rnn = nn.Sequential(
-            BidirectionalLSTM(cfg['n_in'], cfg['n_hidden'], cfg['n_hidden']),
+            BidirectionalLSTM(conv_out_channels[-1], cfg['n_hidden'], cfg['n_hidden']),
             BidirectionalLSTM(cfg['n_hidden'], cfg['n_hidden'], cfg['n_out'])
         )
 
-    def forward(self, x: torch.Tensor) -> T_co:
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         x = self.conv(x)
         b, c, h, w = x.size()
 
